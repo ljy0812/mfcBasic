@@ -1,0 +1,25 @@
+#pragma once
+#include <map>
+#include <memory>
+#include "User.h"
+
+
+class UserManager
+{
+public:
+	UserManager();
+	~UserManager()
+	{
+
+	}
+
+	int autoIncresementForUserId;
+	std::map<int, std::shared_ptr<User>> m_id2UserMap;
+
+	void AssignMemoryAndInsertUserInfomation(std::shared_ptr<User> newUser);
+
+	//std::shared_ptr<User> ShowAllOfUserInfomation(int userId);
+
+private:
+
+};
