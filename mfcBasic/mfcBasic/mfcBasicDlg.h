@@ -1,6 +1,5 @@
 ﻿
 // mfcBasicDlg.h: 헤더 파일
-//
 
 #pragma once
 #include "CUserInsertDlg.h"
@@ -22,7 +21,13 @@ public:
 	int selectedIndexOnMenu;
 	int selectedIndexOnUserList;
 
+	void SettingIndexList();
+	void ResettingViewList();
+
 	void ShowUserInfoDlgByUserNo(int userId);
+	void MenuAddUser();
+	void MenuEditUserInfo();
+	void MenuDeleteUser();
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -52,10 +57,7 @@ public:
 	afx_msg void OnBnClickedButtonSearch();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
-
-	void SettingIndexList();
-	void ResettingViewList();
-
+	
 	afx_msg void OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnLbnDblclkListIndex();

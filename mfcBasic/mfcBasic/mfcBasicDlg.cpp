@@ -1,6 +1,5 @@
 ﻿
 // mfcBasicDlg.cpp: 구현 파일
-//
 
 #include "stdafx.h"
 #include "mfcBasic.h"
@@ -118,38 +117,6 @@ void CmfcBasicDlg::OnBnClickedButtonSearch()
 	}
 }
 
-void CmfcBasicDlg::SettingIndexList()
-{
-	m_indexList.AddString(TEXT("1.추가하기"));
-	m_indexList.AddString(TEXT("2.편집하기"));
-	m_indexList.AddString(TEXT("3.삭제하기"));
-	m_indexList.AddString(TEXT("4.저장하기"));
-	m_indexList.AddString(TEXT("5.불러오기"));
-
-	m_viewListCtrl.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
-
-	m_viewListCtrl.InsertColumn(0, _T("번호"), LVCFMT_LEFT, 100, -1);
-	m_viewListCtrl.InsertColumn(1, _T("이름"), LVCFMT_LEFT, 100, -1);
-	m_viewListCtrl.InsertColumn(2, _T("휴대폰번호"), LVCFMT_LEFT, 100, -1);
-	m_viewListCtrl.InsertColumn(3, _T("직함"), LVCFMT_LEFT, 100, -1);
-	m_viewListCtrl.InsertColumn(4, _T("부서"), LVCFMT_LEFT, 100, -1);
-
-}
-
-void CmfcBasicDlg::ResettingViewList()
-{
-	m_viewListCtrl.DeleteAllItems();
-	int cnt = 0;
-	for (const auto& element : m_pUserManager->m_id2UserMap)
-	{		
-		m_viewListCtrl.InsertItem(cnt, element.second->GetUserNoConvertedToString());
-		m_viewListCtrl.SetItem(cnt, 1, LVIF_TEXT, element.second->GetUserName(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(cnt, 2, LVIF_TEXT, element.second->GetUserPhoneNo(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(cnt, 3, LVIF_TEXT, element.second->GetUserPosition(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(cnt, 4, LVIF_TEXT, element.second->GetUserTeam(), 0, 0, 0, 0);
-		cnt++;
-	}
-}
 
 
 void CmfcBasicDlg::OnLbnDblclkListIndex()
@@ -158,12 +125,7 @@ void CmfcBasicDlg::OnLbnDblclkListIndex()
 
 	if (selectedIndexOnMenu == 0)
 	{
-		m_pUserInsertDlg->ShowWindow(SW_SHOW);
-		m_pUserInsertDlg->SetWindowTextW(_T("사용자 추가하기"));
-		m_pUserInsertDlg->m_insertName.SetWindowTextW(_T(""));
-		m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(_T(""));
-		m_pUserInsertDlg->m_insertPosition.SetWindowTextW(_T(""));
-		m_pUserInsertDlg->m_insertTeam.SetWindowTextW(_T(""));
+		MenuAddUser();
 	}
 	else if (selectedIndexOnMenu != 0)
 	{
@@ -171,32 +133,11 @@ void CmfcBasicDlg::OnLbnDblclkListIndex()
 		{
 			if (selectedIndexOnMenu == 1)
 			{
-				m_pUserInsertDlg->ShowWindow(SW_SHOW);
-				m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
-
-				m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
-				m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
-				m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
-				m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
-
+				MenuEditUserInfo();
 			}
 			else if (selectedIndexOnMenu == 2)
 			{
-				if (IDYES == AfxMessageBox(_T("삭제하시겠습니까?"), MB_YESNO))
-				{
-					if (m_pUserManager->DeleteUser(selectedIndexOnUserList))
-					{
-						AfxMessageBox(_T("삭제완료"));
-						ResettingViewList();
-					}
-					else
-					{
-						AfxMessageBox(_T("삭제를 완료하지 못했습니다."));
-					}
-				}
-				else if (IDNO)
-				{
-				}
+				MenuDeleteUser();
 			}
 		}
 		else
@@ -235,6 +176,51 @@ void CmfcBasicDlg::OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 	
 }
 
+
+void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	*pResult = 0;
+	
+	POSITION pos;
+	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
+	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
+
+}
+
+void CmfcBasicDlg::SettingIndexList()
+{
+	m_indexList.AddString(TEXT("1.추가하기"));
+	m_indexList.AddString(TEXT("2.편집하기"));
+	m_indexList.AddString(TEXT("3.삭제하기"));
+	m_indexList.AddString(TEXT("4.저장하기"));
+	m_indexList.AddString(TEXT("5.불러오기"));
+
+	m_viewListCtrl.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
+
+	m_viewListCtrl.InsertColumn(0, _T("번호"), LVCFMT_LEFT, 100, -1);
+	m_viewListCtrl.InsertColumn(1, _T("이름"), LVCFMT_LEFT, 100, -1);
+	m_viewListCtrl.InsertColumn(2, _T("휴대폰번호"), LVCFMT_LEFT, 100, -1);
+	m_viewListCtrl.InsertColumn(3, _T("직함"), LVCFMT_LEFT, 100, -1);
+	m_viewListCtrl.InsertColumn(4, _T("부서"), LVCFMT_LEFT, 100, -1);
+
+}
+
+void CmfcBasicDlg::ResettingViewList()
+{
+	m_viewListCtrl.DeleteAllItems();
+	int cnt = 0;
+	for (const auto& element : m_pUserManager->m_id2UserMap)
+	{
+		m_viewListCtrl.InsertItem(cnt, element.second->GetUserNoConvertedToString());
+		m_viewListCtrl.SetItem(cnt, 1, LVIF_TEXT, element.second->GetUserName(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 2, LVIF_TEXT, element.second->GetUserPhoneNo(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 3, LVIF_TEXT, element.second->GetUserPosition(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 4, LVIF_TEXT, element.second->GetUserTeam(), 0, 0, 0, 0);
+		cnt++;
+	}
+}
+
 void CmfcBasicDlg::ShowUserInfoDlgByUserNo(int userId)
 {
 	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
@@ -248,14 +234,41 @@ void CmfcBasicDlg::ShowUserInfoDlgByUserNo(int userId)
 	m_pShowUserInfo->m_showTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserTeam());
 }
 
-void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
+void CmfcBasicDlg::MenuAddUser()
 {
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	*pResult = 0;
-	
-	POSITION pos;
-	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
-	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
+	m_pUserInsertDlg->ShowWindow(SW_SHOW);
+	m_pUserInsertDlg->SetWindowTextW(_T("사용자 추가하기"));
+	m_pUserInsertDlg->m_insertName.SetWindowTextW(_T(""));
+	m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(_T(""));
+	m_pUserInsertDlg->m_insertPosition.SetWindowTextW(_T(""));
+	m_pUserInsertDlg->m_insertTeam.SetWindowTextW(_T(""));
+}
+void CmfcBasicDlg::MenuEditUserInfo()
+{
+	m_pUserInsertDlg->ShowWindow(SW_SHOW);
+	m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
 
+	m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
+	m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
+	m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
+	m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
+}
+void CmfcBasicDlg::MenuDeleteUser()
+{
+	if (IDYES == AfxMessageBox(_T("삭제하시겠습니까?"), MB_YESNO))
+	{
+		if (m_pUserManager->DeleteUser(selectedIndexOnUserList))
+		{
+			AfxMessageBox(_T("삭제완료"));
+			ResettingViewList();
+		}
+		else
+		{
+			AfxMessageBox(_T("삭제를 완료하지 못했습니다."));
+		}
+	}
+	else if (IDNO)
+	{
+	}
 }
 
