@@ -64,6 +64,7 @@ BOOL CmfcBasicDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	SettingIndexList();
 	m_pUserInsertDlg->Create(IDD_DIALOG_INSERT, this);
+	m_pUserInsertDlg->CenterWindow(this);
 
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -204,19 +205,45 @@ void CmfcBasicDlg::OnLbnDblclkListIndex()
 		m_pUserInsertDlg->m_insertPosition.SetWindowTextW(_T(""));
 		m_pUserInsertDlg->m_insertTeam.SetWindowTextW(_T(""));
 	}
-	else if (selectedIndexOnMenu != 0 && selectedIndexOnUserList > 0)
+	else if (selectedIndexOnMenu != 0)
 	{
-		if (selectedIndexOnMenu == 1)
+		if (selectedIndexOnUserList > 0)
 		{
-			m_pUserInsertDlg->ShowWindow(SW_SHOW);
-			m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
+			if (selectedIndexOnMenu == 1)
+			{
+				m_pUserInsertDlg->ShowWindow(SW_SHOW);
+				m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
 
-			m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
-			m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
-			m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
-			m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
+				m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
+				m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
+				m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
+				m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
 
+			}
+			else if (selectedIndexOnMenu == 2)
+			{
+				if (IDYES == AfxMessageBox(_T("삭제하시겠습니까?"), MB_YESNO))
+				{
+					if (m_pUserManager->DeleteUser(selectedIndexOnUserList))
+					{
+						AfxMessageBox(_T("삭제완료"));
+						ResettingViewList();
+					}
+					else
+					{
+						AfxMessageBox(_T("삭제를 완료하지 못했습니다."));
+					}
+				}
+				else if (IDNO)
+				{
+				}
+			}
 		}
+		else
+		{
+			MessageBox(_T("사용자를 선택 후 눌러주세요."));
+		}
+		
 	}
 }
 
@@ -288,7 +315,7 @@ void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
 	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
 
-
+/*
 	if (selectedIndexOnUserList > 0)
 	{
 		
@@ -305,7 +332,7 @@ void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 		default:
 			break;
 		}
-	}
+	}*/
 	
 
 }

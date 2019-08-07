@@ -18,6 +18,7 @@ public:
 
 	void AssignMemoryAndInsertUserInformation(std::shared_ptr<User> newUser);
 	void UpdateUserInformation(int userId, std::shared_ptr<User> newUser);
+	bool DeleteUser(int userId);
 
 	//std::shared_ptr<User> ShowAllOfUserInfomation(int userId);
 

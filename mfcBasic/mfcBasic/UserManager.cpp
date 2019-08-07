@@ -22,6 +22,20 @@ void UserManager::UpdateUserInformation(int userId, std::shared_ptr<User> newUse
 	m_id2UserMap[userId]->SetUserTeam(newUser->GetUserTeam());
 }
 
+bool UserManager::DeleteUser(int userId)
+{
+	if (m_id2UserMap.find(userId) != m_id2UserMap.end())
+	{
+		m_id2UserMap.erase(userId);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+		
+}
+
 //
 //std::shared_ptr<User> UserManager::ShowAllOfUserInfomation(int userId)
 //{
