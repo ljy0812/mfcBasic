@@ -39,9 +39,7 @@ void CmfcBasicDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CmfcBasicDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_EN_CHANGE(IDC_EDIT_SEARCH_ID, &CmfcBasicDlg::OnEnChangeEditSearchId)
 	ON_BN_CLICKED(IDC_BUTTON_SEARCH, &CmfcBasicDlg::OnBnClickedButtonSearch)
-	ON_LBN_SELCHANGE(IDC_LIST_INDEX, &CmfcBasicDlg::OnLbnSelchangeListIndex)
 	ON_BN_CLICKED(IDOK, &CmfcBasicDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CmfcBasicDlg::OnBnClickedCancel)
 	ON_NOTIFY(NM_DBLCLK, IDC_LISTCTRL_VIEW, &CmfcBasicDlg::OnNMDblclkListctrlView)
@@ -106,56 +104,18 @@ HCURSOR CmfcBasicDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
-void CmfcBasicDlg::OnBnClickedButton1()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//ex) 버튼 클릭 시 text변경
-	//m_searchButton.SetWindowTextW(TEXT("test"));
-
-	MessageBox(TEXT("example"));
-}
-
-
-void CmfcBasicDlg::OnEnChangeEdit1()
-{
-	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
-	// CDialogEx::OnInitDialog() 함수를 재지정 
-	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
-	// 이 알림 메시지를 보내지 않습니다.
-
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-
-void CmfcBasicDlg::OnLbnSelchangeList2()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-
-void CmfcBasicDlg::OnEnChangeEditSearchId()
-{
-	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
-	// CDialogEx::OnInitDialog() 함수를 재지정 
-	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
-	// 이 알림 메시지를 보내지 않습니다.
-
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-
 void CmfcBasicDlg::OnBnClickedButtonSearch()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-
-	//m_editSearchById.SetWindowText(TEXT("ID를 입력해주세요."));
-
 	CString str;
 	m_editSearchById.GetWindowTextW(str);
-	MessageBox(str);
-
+	if (m_pUserManager->SearchUserByUserNo(str))
+	{
+		ShowUserInfoDlgByUserNo(_ttoi(str));
+	}
+	else
+	{
+		MessageBox(_T("검색 결과가 없습니다."));
+	}
 }
 
 void CmfcBasicDlg::SettingIndexList()
@@ -247,41 +207,21 @@ void CmfcBasicDlg::OnLbnDblclkListIndex()
 	}
 }
 
-void CmfcBasicDlg::OnLbnSelchangeListIndex()
-{
-	
-		
-	
-}
-
-
-void CmfcBasicDlg::OnLbnSelchangeList3()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-
-
 void CmfcBasicDlg::OnBnClickedOk()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CDialogEx::OnOK();
 }
 
 
 void CmfcBasicDlg::OnBnClickedCancel()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CDialogEx::OnCancel();
 }
-
-
 
 
 void CmfcBasicDlg::OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 
 	POSITION pos;
@@ -290,50 +230,32 @@ void CmfcBasicDlg::OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 
 	if (index > 0)
 	{
-		m_pShowUserInfo = std::make_shared<CShowUserInfo>();
-		m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
-		m_pShowUserInfo->ShowWindow(SW_SHOW);
-
-		m_pShowUserInfo->m_showNo.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserNoConvertedToString());
-		m_pShowUserInfo->m_showName.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserName());
-		m_pShowUserInfo->m_showPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserPhoneNo());
-		m_pShowUserInfo->m_showPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserPosition());
-		m_pShowUserInfo->m_showTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserTeam());
+		ShowUserInfoDlgByUserNo(index);
 	}
 	
-
 }
 
+void CmfcBasicDlg::ShowUserInfoDlgByUserNo(int userId)
+{
+	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
+	m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
+	m_pShowUserInfo->ShowWindow(SW_SHOW);
+
+	m_pShowUserInfo->m_showNo.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserNoConvertedToString());
+	m_pShowUserInfo->m_showName.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserName());
+	m_pShowUserInfo->m_showPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserPhoneNo());
+	m_pShowUserInfo->m_showPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserPosition());
+	m_pShowUserInfo->m_showTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserTeam());
+}
 
 void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 	
 	POSITION pos;
 	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
 	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
-
-/*
-	if (selectedIndexOnUserList > 0)
-	{
-		
-		switch (selectedIndexOnMenu)
-		{
-		case 1:
-			MessageBox(TEXT("편집"));
-			break;
-
-		case 2:
-			MessageBox(TEXT("삭제"));
-			break;
-
-		default:
-			break;
-		}
-	}*/
-	
 
 }
 

@@ -22,6 +22,8 @@ public:
 	int selectedIndexOnMenu;
 	int selectedIndexOnUserList;
 
+	void ShowUserInfoDlgByUserNo(int userId);
+
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFCBASIC_DIALOG };
@@ -46,16 +48,8 @@ public:
 
 	CListBox m_indexList;
 	CListCtrl m_viewListCtrl;
-
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnEnChangeEdit1();
-	afx_msg void OnLbnSelchangeList2();
-	
-	afx_msg void OnEnChangeEditSearchId();
+		
 	afx_msg void OnBnClickedButtonSearch();
-	afx_msg void OnLbnSelchangeListIndex();
-
-	afx_msg void OnLbnSelchangeList3();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
 

@@ -36,7 +36,22 @@ bool UserManager::DeleteUser(int userId)
 		
 }
 
-//
-//std::shared_ptr<User> UserManager::ShowAllOfUserInfomation(int userId)
-//{
-//}
+bool UserManager::SearchUserByUserNo(CString userId)
+{
+	if (userId.IsEmpty() || (userId.Find(_T(" ")) >= 0))
+	{
+		return false;
+	}
+	else
+	{
+		if (m_id2UserMap.find(_ttoi(userId)) != m_id2UserMap.end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
