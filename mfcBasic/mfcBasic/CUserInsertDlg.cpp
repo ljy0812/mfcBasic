@@ -11,10 +11,10 @@
 
 IMPLEMENT_DYNAMIC(CUserInsertDlg, CDialogEx)
 
-CUserInsertDlg::CUserInsertDlg(CWnd* pParent /*=nullptr*/)
+CUserInsertDlg::CUserInsertDlg(CmfcBasicDlg* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG_INSERT, pParent)
 {
-	m_pMfcBasicDlg = std::make_shared<CmfcBasicDlg>();
+	m_pMainDlg = pParent;
 }
 
 CUserInsertDlg::~CUserInsertDlg()
@@ -47,21 +47,31 @@ void CUserInsertDlg::OnBnClickedButtonInsert()
 	m_insertPhoneNo.GetWindowTextW(strPhoneNo);
 	m_insertPosition.GetWindowTextW(strPosition);
 	m_insertTeam.GetWindowTextW(strTeam);
-
+	
 	std::shared_ptr<User> newUser = std::make_shared<User>(strName, strPhoneNo, strPosition, strTeam);
 
 	if (!IsWrittenAllOfElementsForInsert(newUser))
 	{
 		MessageBox(TEXT("모든정보를 입력해주세요"));
 	}
-	else 
+	else
 	{
-		m_pMainDlg->m_pUserManager->AssignMemoryAndInsertUserInfomation(newUser);
-		m_pMainDlg->ResettingViewList();
+		if (((CmfcBasicDlg*)GetParent())->selectedIndexOnMenu == 0)
+		{
+			((CmfcBasicDlg*)GetParent())->m_pUserManager->AssignMemoryAndInsertUserInformation(newUser);	
+			MessageBox(TEXT("추가되었습니다."));
+		
+		}
+		else if (((CmfcBasicDlg*)GetParent())->selectedIndexOnMenu == 1)
+		{
+			((CmfcBasicDlg*)GetParent())->m_pUserManager->UpdateUserInformation(((CmfcBasicDlg*)GetParent())->selectedIndexOnUserList, newUser);
+			MessageBox(TEXT("변경되었습니다."));
+		}
 
-		MessageBox(TEXT("추가되었습니다."));
+		((CmfcBasicDlg*)GetParent())->ResettingViewList();
 		CUserInsertDlg::EndDialog(0);
 	}
+	
 }
 
 bool CUserInsertDlg::IsWrittenAllOfElementsForInsert(std::shared_ptr<User> newUser)

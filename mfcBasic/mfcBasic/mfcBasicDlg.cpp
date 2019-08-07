@@ -18,8 +18,13 @@
 CmfcBasicDlg::CmfcBasicDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCBASIC_DIALOG, pParent)
 {
+
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_pUserManager = std::make_shared<UserManager>();
+	m_pUserInsertDlg = std::make_shared<CUserInsertDlg>();
+
+	selectedIndexOnMenu = -1;
+	selectedIndexOnUserList = 0;
 }
 
 void CmfcBasicDlg::DoDataExchange(CDataExchange* pDX)
@@ -40,7 +45,8 @@ BEGIN_MESSAGE_MAP(CmfcBasicDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CmfcBasicDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CmfcBasicDlg::OnBnClickedCancel)
 	ON_NOTIFY(NM_DBLCLK, IDC_LISTCTRL_VIEW, &CmfcBasicDlg::OnNMDblclkListctrlView)
-	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LISTCTRL_VIEW, &CmfcBasicDlg::OnLvnItemchangedListctrlView)
+	ON_NOTIFY(NM_CLICK, IDC_LISTCTRL_VIEW, &CmfcBasicDlg::OnNMClickListctrlView)
+	ON_LBN_DBLCLK(IDC_LIST_INDEX, &CmfcBasicDlg::OnLbnDblclkListIndex)
 END_MESSAGE_MAP()
 
 
@@ -57,6 +63,8 @@ BOOL CmfcBasicDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	SettingIndexList();
+	m_pUserInsertDlg->Create(IDD_DIALOG_INSERT, this);
+
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -170,47 +178,53 @@ void CmfcBasicDlg::SettingIndexList()
 void CmfcBasicDlg::ResettingViewList()
 {
 	m_viewListCtrl.DeleteAllItems();
+	int cnt = 0;
 	for (const auto& element : m_pUserManager->m_id2UserMap)
 	{		
-		m_viewListCtrl.InsertItem(0, element.second->GetUserNoConvertedToString());
-		m_viewListCtrl.SetItem(0, 1, LVIF_TEXT, element.second->GetUserName(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(0, 2, LVIF_TEXT, element.second->GetUserPhoneNo(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(0, 3, LVIF_TEXT, element.second->GetUserPosition(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(0, 4, LVIF_TEXT, element.second->GetUserTeam(), 0, 0, 0, 0);
-
+		m_viewListCtrl.InsertItem(cnt, element.second->GetUserNoConvertedToString());
+		m_viewListCtrl.SetItem(cnt, 1, LVIF_TEXT, element.second->GetUserName(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 2, LVIF_TEXT, element.second->GetUserPhoneNo(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 3, LVIF_TEXT, element.second->GetUserPosition(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 4, LVIF_TEXT, element.second->GetUserTeam(), 0, 0, 0, 0);
+		cnt++;
 	}
 }
 
 
+void CmfcBasicDlg::OnLbnDblclkListIndex()
+{
+	selectedIndexOnMenu = m_indexList.GetCurSel();
+
+	if (selectedIndexOnMenu == 0)
+	{
+		m_pUserInsertDlg->ShowWindow(SW_SHOW);
+		m_pUserInsertDlg->SetWindowTextW(_T("사용자 추가하기"));
+		m_pUserInsertDlg->m_insertName.SetWindowTextW(_T(""));
+		m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(_T(""));
+		m_pUserInsertDlg->m_insertPosition.SetWindowTextW(_T(""));
+		m_pUserInsertDlg->m_insertTeam.SetWindowTextW(_T(""));
+	}
+	else if (selectedIndexOnMenu != 0 && selectedIndexOnUserList > 0)
+	{
+		if (selectedIndexOnMenu == 1)
+		{
+			m_pUserInsertDlg->ShowWindow(SW_SHOW);
+			m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
+
+			m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
+			m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
+			m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
+			m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
+
+		}
+	}
+}
 
 void CmfcBasicDlg::OnLbnSelchangeListIndex()
 {
-	int selectedMenu = m_indexList.GetCurSel();
-
-	switch (selectedMenu)
-	{
-	case 0:
-		m_pUserInsertDlg = std::make_shared<CUserInsertDlg>();
-
-		m_pUserInsertDlg->Create(IDD_DIALOG_INSERT, this);
-		m_pUserInsertDlg->ShowWindow(SW_SHOW);
-
-		break;
-	case 1:
-		MessageBox(TEXT("편집하기"));
-		break;
-	case 2:
-		MessageBox(TEXT("삭제하기"));
-		break;
-	case 3:
-		MessageBox(TEXT("저장하기"));
-		break;
-	case 4:
-		MessageBox(TEXT("불러오기"));
-		break;
-	default:
-		break;
-	}
+	
+		
+	
 }
 
 
@@ -243,18 +257,56 @@ void CmfcBasicDlg::OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
 
-	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
-	m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
-	m_pShowUserInfo->ShowWindow(SW_SHOW);
+	POSITION pos;
+	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
+	int index = m_viewListCtrl.GetNextSelectedItem(pos)+1;
 
-	m_pShowUserInfo->m_showNo.SetWindowTextW(TEXT("noChange"));
+	if (index > 0)
+	{
+		m_pShowUserInfo = std::make_shared<CShowUserInfo>();
+		m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
+		m_pShowUserInfo->ShowWindow(SW_SHOW);
+
+		m_pShowUserInfo->m_showNo.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserNoConvertedToString());
+		m_pShowUserInfo->m_showName.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserName());
+		m_pShowUserInfo->m_showPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserPhoneNo());
+		m_pShowUserInfo->m_showPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserPosition());
+		m_pShowUserInfo->m_showTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[index]->GetUserTeam());
+	}
+	
 
 }
 
 
-void CmfcBasicDlg::OnLvnItemchangedListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
+void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	*pResult = 0;
+	
+	POSITION pos;
+	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
+	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
+
+
+	if (selectedIndexOnUserList > 0)
+	{
+		
+		switch (selectedIndexOnMenu)
+		{
+		case 1:
+			MessageBox(TEXT("편집"));
+			break;
+
+		case 2:
+			MessageBox(TEXT("삭제"));
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+
 }
+

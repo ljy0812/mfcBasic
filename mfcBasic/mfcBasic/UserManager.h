@@ -16,7 +16,8 @@ public:
 	int autoIncresementForUserId;
 	std::map<int, std::shared_ptr<User>> m_id2UserMap;
 
-	void AssignMemoryAndInsertUserInfomation(std::shared_ptr<User> newUser);
+	void AssignMemoryAndInsertUserInformation(std::shared_ptr<User> newUser);
+	void UpdateUserInformation(int userId, std::shared_ptr<User> newUser);
 
 	//std::shared_ptr<User> ShowAllOfUserInfomation(int userId);
 

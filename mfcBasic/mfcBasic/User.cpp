@@ -8,19 +8,19 @@ User::User()
 	m_userPrimaryNo = 0;
 }
 
-User::User(CString name, CString position, CString team, CString phoneNo)
+User::User(CString name, CString phoneNo, CString position, CString team)
 {
 	m_insertName = name;
+	m_insertPhoneNo = phoneNo;
 	m_insertPosition = position;
 	m_insertTeam = team;
-	m_insertPhoneNo = phoneNo;
 }
 
 void User::SetUserNo(int no)
 {
 	m_userPrimaryNo = no;
 }
-void User::SetUserNmae(CString name) 
+void User::SetUserName(CString name) 
 {
 	m_insertName = name;
 }

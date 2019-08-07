@@ -5,12 +5,12 @@ class User
 {
 public:
 	User();
-	User(CString name, CString position, CString team, CString phoneNo);
+	User(CString name, CString phoneNo, CString position, CString team);
 	~User()
 	{
 	}
 	void SetUserNo(int no);
-	void SetUserNmae(CString name);
+	void SetUserName(CString name);
 	void SetUserPosition(CString position);
 	void SetUserTeam(CString team);
 	void SetUserPhoneNo(CString phoneNo);

@@ -19,6 +19,9 @@ public:
 	std::shared_ptr<CShowUserInfo> m_pShowUserInfo{};
 	std::shared_ptr<UserManager> m_pUserManager{};
 
+	int selectedIndexOnMenu;
+	int selectedIndexOnUserList;
+
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFCBASIC_DIALOG };
@@ -60,5 +63,6 @@ public:
 	void ResettingViewList();
 
 	afx_msg void OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnLvnItemchangedListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnLbnDblclkListIndex();
 };

@@ -12,7 +12,7 @@ class CUserInsertDlg : public CDialogEx
 	DECLARE_DYNAMIC(CUserInsertDlg)
 
 public:
-	CUserInsertDlg(CWnd* pParent = nullptr);   // 표준 생성자입니다.
+	CUserInsertDlg(CmfcBasicDlg* pParent = nullptr);   // 표준 생성자입니다.
 	virtual ~CUserInsertDlg();
 
 	bool IsWrittenAllOfElementsForInsert(std::shared_ptr<User> newUser);
@@ -24,7 +24,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-	CmfcBasicDlg* m_pMainDlg = (CmfcBasicDlg*)AfxGetApp()->m_pMainWnd;
+	CmfcBasicDlg* m_pMainDlg;
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -37,6 +37,5 @@ public:
 
 	afx_msg void OnBnClickedButtonInsert();
 
-	
 
 };
