@@ -5,28 +5,27 @@ class User
 {
 public:
 	User();
-	User(CString name, CString phoneNo, CString position, CString team);
-	~User()
-	{
-	}
-	void SetUserNo(int no);
-	void SetUserName(CString name);
-	void SetUserPosition(CString position);
-	void SetUserTeam(CString team);
-	void SetUserPhoneNo(CString phoneNo);
+	User(CString userName, CString userPhoneNumber, CString userPosition, CString userTeam);
+	virtual ~User() = default;
 
-	int GetUserNo();
-	CString GetUserNoConvertedToString();
+	void SetUserId(const int& userId);
+	void SetUserName(const CString& userName);
+	void SetUserPosition(const CString& userPosition);
+	void SetUserTeam(const CString& userTeam);
+	void SetUserphoneNumber(const CString& userPhoneNumber);
+
+	int GetUserNumber();
+	CString GetUserIdConvertedToString();
 	CString GetUserName();
 	CString GetUserPosition();
 	CString GetUserTeam();
-	CString GetUserPhoneNo();
+	CString GetUserPhoneNumber();
 
 private: 
-	int m_userPrimaryNo;
-	CString m_insertName;
-	CString m_insertPosition;
-	CString m_insertTeam;
-	CString m_insertPhoneNo;
+	int m_userPrimaryId;
+	CString m_insertUserName;
+	CString m_insertUserPosition;
+	CString m_insertUserTeam;
+	CString m_insertUserPhoneNumber;
 
 };

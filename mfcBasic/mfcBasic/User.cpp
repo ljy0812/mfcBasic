@@ -5,60 +5,58 @@
 
 User::User()
 {
-	m_userPrimaryNo = 0;
+	m_userPrimaryId = 0;
 }
 
-User::User(CString name, CString phoneNo, CString position, CString team)
-{
-	m_insertName = name;
-	m_insertPhoneNo = phoneNo;
-	m_insertPosition = position;
-	m_insertTeam = team;
+User::User(CString userName, CString phoneNumber, CString position, CString team)
+	: m_insertUserName(userName), m_insertUserPhoneNumber(phoneNumber),
+	m_insertUserPosition(position),	m_insertUserTeam(team)
+{	
 }
 
-void User::SetUserNo(int no)
+void User::SetUserId(const int& userId)
 {
-	m_userPrimaryNo = no;
+	m_userPrimaryId = userId;
 }
-void User::SetUserName(CString name) 
+void User::SetUserName(const CString& userName)
 {
-	m_insertName = name;
+	m_insertUserName = userName;
 }
-void User::SetUserPosition(CString position)
+void User::SetUserPosition(const CString& userPosition)
 {
-	m_insertPosition = position;
+	m_insertUserPosition = userPosition;
 }
-void User::SetUserTeam(CString team)
+void User::SetUserTeam(const CString& userTeam)
 {
-	m_insertTeam = team;
+	m_insertUserTeam = userTeam;
 }
-void User::SetUserPhoneNo(CString phoneNo)
+void User::SetUserphoneNumber(const CString& userPhoneNumber)
 {
-	m_insertPhoneNo = phoneNo;
+	m_insertUserPhoneNumber = userPhoneNumber;
 }
-int User::GetUserNo()
+int User::GetUserNumber()
 {
-	return m_userPrimaryNo;
+	return m_userPrimaryId;
 }
-CString User::GetUserNoConvertedToString()
+CString User::GetUserIdConvertedToString()
 {
 	CString str;
-	str.Format(_T("%d"), m_userPrimaryNo);
+	str.Format(_T("%d"), m_userPrimaryId);
 	return str;
 }
 CString User::GetUserName()
 {
-	return m_insertName;
+	return m_insertUserName;
 }
 CString User::GetUserPosition()
 {
-	return m_insertPosition;
+	return m_insertUserPosition;
 }
 CString User::GetUserTeam()
 {
-	return m_insertTeam;
+	return m_insertUserTeam;
 }
-CString User::GetUserPhoneNo()
+CString User::GetUserPhoneNumber()
 {
-	return m_insertPhoneNo;
+	return m_insertUserPhoneNumber;
 }

@@ -1,6 +1,5 @@
 ﻿
 // mfcBasicDlg.h: 헤더 파일
-//
 
 #pragma once
 #include "CUserInsertDlg.h"
@@ -15,22 +14,42 @@ class CmfcBasicDlg : public CDialogEx
 public:
 	CmfcBasicDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 	
-	std::shared_ptr<CUserInsertDlg> m_pUserInsertDlg{};
-	std::shared_ptr<CShowUserInfo> m_pShowUserInfo{};
-	std::shared_ptr<UserManager> m_pUserManager{};
+	void SettingIndexList();
+	void ResettingViewList();
 
-	int selectedIndexOnMenu;
-	int selectedIndexOnUserList;
+	void ShowUserInfoDlgByUserId(const int& userId);
+	void MenuAddUser();
+	void MenuEditUserInfo(const int& userId);
+	void MenuDeleteUser(const int& userId);
+
+	
+	afx_msg void OnBnClickedButtonSearch();
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
+
+	afx_msg void OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnLbnDblclkListIndex();
+
+	CButton m_searchButton;
+	CEdit m_editSearchById;
+
+	CListBox m_indexList;
+	CListCtrl m_viewListCtrl;
+
+	std::shared_ptr<UserManager> GetPointerUserManager();
+
+	int GetSeletedIndexOnMenuInMfcBasicDlg();
+	int GetSeletedIndexOnUserListInMfcBasicDlg();
+	int GetUserIdIntegerInMfcBasicDlg();
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFCBASIC_DIALOG };
 #endif
-
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
-
-
+	
 // 구현입니다.
 protected:
 	HICON m_hIcon;
@@ -40,29 +59,16 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-public:
-	CButton m_searchButton;
-	CEdit m_editSearchById;
 
-	CListBox m_indexList;
-	CListCtrl m_viewListCtrl;
 
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnEnChangeEdit1();
-	afx_msg void OnLbnSelchangeList2();
+private:
+	std::shared_ptr<CUserInsertDlg> m_pUserInsertDlg{};
+	std::shared_ptr<CShowUserInfo> m_pShowUserInfo{};
+	std::shared_ptr<UserManager> m_pUserManager{};
+
+	int m_selectedIndexOnMenu;
+	int m_selectedIndexOnUserList;
+	int m_userIdInteger;
 	
-	afx_msg void OnEnChangeEditSearchId();
-	afx_msg void OnBnClickedButtonSearch();
-	afx_msg void OnLbnSelchangeListIndex();
-
-	afx_msg void OnLbnSelchangeList3();
-	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedCancel();
-
-	void SettingIndexList();
-	void ResettingViewList();
-
-	afx_msg void OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnLbnDblclkListIndex();
+	
 };
