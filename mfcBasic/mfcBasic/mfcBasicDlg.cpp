@@ -21,9 +21,14 @@ CmfcBasicDlg::CmfcBasicDlg(CWnd* pParent /*=nullptr*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_pUserManager = std::make_shared<UserManager>();
 	m_pUserInsertDlg = std::make_shared<CUserInsertDlg>();
+	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
 
-	selectedIndexOnMenu = -1;
-	selectedIndexOnUserList = 0;
+	m_selectedIndexOnMenu = -1;
+	m_selectedIndexOnUserList = -1;
+	m_userIdInteger = -1;
+
+
+	setlocale(LC_ALL, "korean");
 }
 
 void CmfcBasicDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,6 +68,8 @@ BOOL CmfcBasicDlg::OnInitDialog()
 	m_pUserInsertDlg->Create(IDD_DIALOG_INSERT, this);
 	m_pUserInsertDlg->CenterWindow(this);
 
+	m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
+	m_pShowUserInfo->CenterWindow(this);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -105,11 +112,13 @@ HCURSOR CmfcBasicDlg::OnQueryDragIcon()
 
 void CmfcBasicDlg::OnBnClickedButtonSearch()
 {
-	CString str;
-	m_editSearchById.GetWindowTextW(str);
-	if (m_pUserManager->SearchUserByUserNo(str))
+	CString userId;
+	m_editSearchById.GetWindowTextW(userId);
+
+	const auto& isExistUser = m_pUserManager->SearchUserByUserId(userId);
+	if (isExistUser)
 	{
-		ShowUserInfoDlgByUserNo(_ttoi(str));
+		ShowUserInfoDlgByUserId(_ttoi(userId));
 	}
 	else
 	{
@@ -121,23 +130,25 @@ void CmfcBasicDlg::OnBnClickedButtonSearch()
 
 void CmfcBasicDlg::OnLbnDblclkListIndex()
 {
-	selectedIndexOnMenu = m_indexList.GetCurSel();
+	m_selectedIndexOnMenu = m_indexList.GetCurSel();
+	const auto& userId = m_viewListCtrl.GetItemText(m_selectedIndexOnUserList, 0);
+	m_userIdInteger = _ttoi(userId);
 
-	if (selectedIndexOnMenu == 0)
+	if (m_selectedIndexOnMenu == 0)
 	{
 		MenuAddUser();
 	}
-	else if (selectedIndexOnMenu != 0)
+	else if (m_selectedIndexOnMenu != 0)
 	{
-		if (selectedIndexOnUserList > 0)
+		if (m_selectedIndexOnUserList >= 0)
 		{
-			if (selectedIndexOnMenu == 1)
+			if (m_selectedIndexOnMenu == 1)
 			{
-				MenuEditUserInfo();
+				MenuEditUserInfo(m_userIdInteger);
 			}
-			else if (selectedIndexOnMenu == 2)
+			else if (m_selectedIndexOnMenu == 2)
 			{
-				MenuDeleteUser();
+				MenuDeleteUser(m_userIdInteger);
 			}
 		}
 		else
@@ -167,11 +178,12 @@ void CmfcBasicDlg::OnNMDblclkListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 
 	POSITION pos;
 	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
-	int index = m_viewListCtrl.GetNextSelectedItem(pos)+1;
+	const auto& index = m_viewListCtrl.GetNextSelectedItem(pos);
+	const auto& userId = m_viewListCtrl.GetItemText(index, 0);
 
-	if (index > 0)
+	if (index >= 0)
 	{
-		ShowUserInfoDlgByUserNo(index);
+		ShowUserInfoDlgByUserId(_ttoi(userId));
 	}
 	
 }
@@ -184,7 +196,7 @@ void CmfcBasicDlg::OnNMClickListctrlView(NMHDR *pNMHDR, LRESULT *pResult)
 	
 	POSITION pos;
 	pos = m_viewListCtrl.GetFirstSelectedItemPosition();
-	selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos) + 1;
+	m_selectedIndexOnUserList = m_viewListCtrl.GetNextSelectedItem(pos);
 
 }
 
@@ -210,28 +222,28 @@ void CmfcBasicDlg::ResettingViewList()
 {
 	m_viewListCtrl.DeleteAllItems();
 	int cnt = 0;
-	for (const auto& element : m_pUserManager->m_id2UserMap)
+	for (const auto& element : m_pUserManager->GetUserMap())
 	{
-		m_viewListCtrl.InsertItem(cnt, element.second->GetUserNoConvertedToString());
+		m_viewListCtrl.InsertItem(cnt, element.second->GetUserIdConvertedToString());
 		m_viewListCtrl.SetItem(cnt, 1, LVIF_TEXT, element.second->GetUserName(), 0, 0, 0, 0);
-		m_viewListCtrl.SetItem(cnt, 2, LVIF_TEXT, element.second->GetUserPhoneNo(), 0, 0, 0, 0);
+		m_viewListCtrl.SetItem(cnt, 2, LVIF_TEXT, element.second->GetUserPhoneNumber(), 0, 0, 0, 0);
 		m_viewListCtrl.SetItem(cnt, 3, LVIF_TEXT, element.second->GetUserPosition(), 0, 0, 0, 0);
 		m_viewListCtrl.SetItem(cnt, 4, LVIF_TEXT, element.second->GetUserTeam(), 0, 0, 0, 0);
 		cnt++;
 	}
 }
 
-void CmfcBasicDlg::ShowUserInfoDlgByUserNo(int userId)
+void CmfcBasicDlg::ShowUserInfoDlgByUserId(const int& userId)
 {
-	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
-	m_pShowUserInfo->Create(IDD_DIALOG_SHOW_INFO, this);
+	auto& userMap = m_pUserManager->GetUserMap();
+
 	m_pShowUserInfo->ShowWindow(SW_SHOW);
 
-	m_pShowUserInfo->m_showNo.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserNoConvertedToString());
-	m_pShowUserInfo->m_showName.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserName());
-	m_pShowUserInfo->m_showPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserPhoneNo());
-	m_pShowUserInfo->m_showPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserPosition());
-	m_pShowUserInfo->m_showTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[userId]->GetUserTeam());
+	m_pShowUserInfo->m_showNo.SetWindowTextW(userMap[userId]->GetUserIdConvertedToString());
+	m_pShowUserInfo->m_showName.SetWindowTextW(userMap[userId]->GetUserName());
+	m_pShowUserInfo->m_showPhoneNo.SetWindowTextW(userMap[userId]->GetUserPhoneNumber());
+	m_pShowUserInfo->m_showPosition.SetWindowTextW(userMap[userId]->GetUserPosition());
+	m_pShowUserInfo->m_showTeam.SetWindowTextW(userMap[userId]->GetUserTeam());
 }
 
 void CmfcBasicDlg::MenuAddUser()
@@ -243,21 +255,25 @@ void CmfcBasicDlg::MenuAddUser()
 	m_pUserInsertDlg->m_insertPosition.SetWindowTextW(_T(""));
 	m_pUserInsertDlg->m_insertTeam.SetWindowTextW(_T(""));
 }
-void CmfcBasicDlg::MenuEditUserInfo()
+void CmfcBasicDlg::MenuEditUserInfo(const int& userId)
 {
+	auto& userMap = m_pUserManager->GetUserMap();
+
 	m_pUserInsertDlg->ShowWindow(SW_SHOW);
 	m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));
 
-	m_pUserInsertDlg->m_insertName.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserName());
-	m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPhoneNo());
-	m_pUserInsertDlg->m_insertPosition.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserPosition());
-	m_pUserInsertDlg->m_insertTeam.SetWindowTextW(m_pUserManager->m_id2UserMap[selectedIndexOnUserList]->GetUserTeam());
+	m_pUserInsertDlg->m_insertName.SetWindowTextW(userMap[userId]->GetUserName());
+	m_pUserInsertDlg->m_insertPhoneNo.SetWindowTextW(userMap[userId]->GetUserPhoneNumber());
+	m_pUserInsertDlg->m_insertPosition.SetWindowTextW(userMap[userId]->GetUserPosition());
+	m_pUserInsertDlg->m_insertTeam.SetWindowTextW(userMap[userId]->GetUserTeam());
 }
-void CmfcBasicDlg::MenuDeleteUser()
+void CmfcBasicDlg::MenuDeleteUser(const int& userId)
 {
+	
 	if (IDYES == AfxMessageBox(_T("삭제하시겠습니까?"), MB_YESNO))
 	{
-		if (m_pUserManager->DeleteUser(selectedIndexOnUserList))
+		const auto& isPossibleDelete = m_pUserManager->DeleteUser(userId);
+		if (isPossibleDelete)
 		{
 			AfxMessageBox(_T("삭제완료"));
 			ResettingViewList();
@@ -270,5 +286,26 @@ void CmfcBasicDlg::MenuDeleteUser()
 	else if (IDNO)
 	{
 	}
+}
+
+
+std::shared_ptr<UserManager> CmfcBasicDlg::GetPointerUserManager()
+{
+	return m_pUserManager;
+}
+
+int CmfcBasicDlg::GetSeletedIndexOnMenuInMfcBasicDlg()
+{
+	return m_selectedIndexOnMenu;
+}
+
+int CmfcBasicDlg::GetSeletedIndexOnUserListInMfcBasicDlg()
+{
+	return m_selectedIndexOnUserList;
+}
+
+int CmfcBasicDlg::GetUserIdIntegerInMfcBasicDlg()
+{
+	return m_userIdInteger;
 }
 

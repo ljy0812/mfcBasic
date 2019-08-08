@@ -8,19 +8,18 @@ class UserManager
 {
 public:
 	UserManager();
-	~UserManager()
-	{
-
-	}
-
-	int autoIncresementForUserId;
-	std::map<int, std::shared_ptr<User>> m_id2UserMap;
-
+	virtual ~UserManager() = default;
+	
 	void AssignMemoryAndInsertUserInformation(std::shared_ptr<User> newUser);
-	void UpdateUserInformation(int userId, std::shared_ptr<User> newUser);
-	bool DeleteUser(int userId);
-	bool SearchUserByUserNo(CString userId);
+	void UpdateUserInformation(const int& userId, std::shared_ptr<User> newUser);
+	bool DeleteUser(const int& userId);
+	bool SearchUserByUserId(const CString& userId);
+
+	std::map<int, std::shared_ptr<User>> GetUserMap();
 	   
 private:
+	int m_autoIncresementForUserId;
+	std::map<int, std::shared_ptr<User>> m_id2UserMap;
+
 
 };

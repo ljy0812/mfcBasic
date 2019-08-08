@@ -13,9 +13,20 @@ class CUserInsertDlg : public CDialogEx
 
 public:
 	CUserInsertDlg(CmfcBasicDlg* pParent = nullptr);   // 표준 생성자입니다.
-	virtual ~CUserInsertDlg();
+	virtual ~CUserInsertDlg() = default;
 
 	bool IsWrittenAllOfElementsForInsert(std::shared_ptr<User> newUser);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	CEdit m_insertName;
+	CEdit m_insertPosition;
+	CEdit m_insertTeam;
+	CEdit m_insertPhoneNo;
+	CButton m_insertButton;
+
+	afx_msg void OnBnClickedButtonInsert();
+	afx_msg void OnBnKillfocusButtonInsert();
+	afx_msg void OnBnSetfocusButtonInsert();
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -27,15 +38,8 @@ protected:
 	CmfcBasicDlg* m_pMainDlg;
 
 	DECLARE_MESSAGE_MAP()
-public:
-	CEdit m_insertName;
-	CEdit m_insertPosition;
-	CEdit m_insertTeam;
-	CEdit m_insertPhoneNo;
-
-	CButton m_insertButton;
-
-	afx_msg void OnBnClickedButtonInsert();
-
-
+	
+private:
+	bool m_isFocusingNow;
+	
 };
