@@ -45,11 +45,12 @@
 
 **View Structure**
 
-![viewStructure](./image/viewStructure.png){: width="100" height="100"}
+![viewStructure](./image/viewStructure.png)
 
----
+
 
 **Model Structure**
 
 ![ModelStructure](./image/ModelStructure.png)
 
+---
