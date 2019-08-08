@@ -41,3 +41,15 @@
 
 ---
 
+### 프로그램 구조
+
+**View Structure**
+
+![viewStructure](./image/viewStructure.png){: width="100" height="100"}
+
+---
+
+**Model Structure**
+
+![ModelStructure](./image/ModelStructure.png)
+
