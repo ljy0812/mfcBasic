@@ -6,6 +6,7 @@
 #include "CShowUserInfo.h"
 #include <memory>
 #include "UserManager.h"
+#include "resource.h"
 
 // CmfcBasicDlg 대화 상자
 class CmfcBasicDlg : public CDialogEx

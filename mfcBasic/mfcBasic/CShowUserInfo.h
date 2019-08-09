@@ -26,4 +26,5 @@ public:
 	CStatic m_showPhoneNo;
 	CStatic m_showPosition;
 	CStatic m_showTeam;
+	CStatic m_showPhoto;
 };

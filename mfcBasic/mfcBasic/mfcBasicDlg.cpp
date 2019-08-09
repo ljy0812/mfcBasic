@@ -5,7 +5,6 @@
 #include "mfcBasic.h"
 #include "mfcBasicDlg.h"
 #include "afxdialogex.h"
-#include "resource.h"
 #include <assert.h>
 
 #ifdef _DEBUG
