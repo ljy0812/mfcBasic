@@ -14,17 +14,26 @@ void UserManager::AssignMemoryAndInsertUserInformation(std::shared_ptr<User> new
 	m_id2UserMap.emplace(m_autoIncresementForUserId, newUser);
 }
 
-void UserManager::UpdateUserInformation(const int& userId, std::shared_ptr<User> newUser)
+bool UserManager::UpdateUserInformation(const int& userId, std::shared_ptr<User> newUser)
 {
-	const auto& userName = newUser->GetUserName();
-	const auto& userPhoneNumber = newUser->GetUserPhoneNumber();
-	const auto& userPosition = newUser->GetUserPosition();
-	const auto& userTeam = newUser->GetUserTeam();
+	if (userId)
+	{
+		const auto& userName = newUser->GetUserName();
+		const auto& userPhoneNumber = newUser->GetUserPhoneNumber();
+		const auto& userPosition = newUser->GetUserPosition();
+		const auto& userTeam = newUser->GetUserTeam();
 
-	m_id2UserMap[userId]->SetUserName(userName);
-	m_id2UserMap[userId]->SetUserphoneNumber(userPhoneNumber);
-	m_id2UserMap[userId]->SetUserPosition(userPosition);
-	m_id2UserMap[userId]->SetUserTeam(userTeam);
+		m_id2UserMap[userId]->SetUserName(userName);
+		m_id2UserMap[userId]->SetUserphoneNumber(userPhoneNumber);
+		m_id2UserMap[userId]->SetUserPosition(userPosition);
+		m_id2UserMap[userId]->SetUserTeam(userTeam);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
 bool UserManager::DeleteUser(const int& userId)
@@ -43,13 +52,15 @@ bool UserManager::DeleteUser(const int& userId)
 
 bool UserManager::SearchUserByUserId(const CString& userId)
 {
+	const int userIdIntType = _ttoi(userId);
+
 	if (userId.IsEmpty() || (userId.Find(_T(" ")) >= 0))
 	{
 		return false;
 	}
 	else
 	{
-		if (m_id2UserMap.find(_ttoi(userId)) != m_id2UserMap.end())
+		if (m_id2UserMap.find(userIdIntType) != m_id2UserMap.end())
 		{
 			return true;
 		}

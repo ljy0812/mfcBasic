@@ -11,7 +11,7 @@ public:
 	virtual ~UserManager() = default;
 	
 	void AssignMemoryAndInsertUserInformation(std::shared_ptr<User> newUser);
-	void UpdateUserInformation(const int& userId, std::shared_ptr<User> newUser);
+	bool UpdateUserInformation(const int& userId, std::shared_ptr<User> newUser);
 	bool DeleteUser(const int& userId);
 	bool SearchUserByUserId(const CString& userId);
 
