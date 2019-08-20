@@ -33,13 +33,23 @@
 
 ----
 
-### 구현 예정인 기능
+**Load**
 
-1. SaveFile(.csv)
-2. LoadFile(.csv)
+![loadFunction](./image/loadFunction.gif)
 
+----
 
----
+**Save**
+
+![SaveFunction](./image/SaveFunction.gif)
+
+----
+
+**ShowImage**
+
+![showImageFunction](./image/showImageFunction.gif)
+
+----
 
 ### 프로그램 구조
 
