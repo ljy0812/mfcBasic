@@ -7,6 +7,7 @@
 #include <memory>
 #include "UserManager.h"
 #include "resource.h"
+#include "FileManager.h"
 
 // CmfcBasicDlg 대화 상자
 class CmfcBasicDlg : public CDialogEx
@@ -22,6 +23,8 @@ public:
 	void MenuAddUser();
 	void MenuEditUserInfo(const int& userId);
 	void MenuDeleteUser(const int& userId);
+	void MenuFileSave();
+	void MenuFileLoad();
 
 	
 	afx_msg void OnBnClickedButtonSearch();
@@ -66,6 +69,7 @@ private:
 	std::shared_ptr<CUserInsertDlg> m_pUserInsertDlg{};
 	std::shared_ptr<CShowUserInfo> m_pShowUserInfo{};
 	std::shared_ptr<UserManager> m_pUserManager{};
+	std::shared_ptr<FileManager> m_pFileManager{};
 
 	int m_selectedIndexOnMenu;
 	int m_selectedIndexOnUserList;

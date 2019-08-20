@@ -21,6 +21,8 @@ CShowUserInfo::~CShowUserInfo()
 {
 }
 
+
+
 void CShowUserInfo::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -38,6 +40,7 @@ END_MESSAGE_MAP()
 
 
 // CShowUserInfo 메시지 처리기
+
 
 
 

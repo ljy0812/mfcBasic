@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="CShowUserInfo.h" />
     <ClInclude Include="CUserInsertDlg.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="mfcBasic.h" />
     <ClInclude Include="mfcBasicDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClCompile Include="CShowUserInfo.cpp" />
     <ClCompile Include="CUserInsertDlg.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="mfcBasic.cpp" />
     <ClCompile Include="mfcBasicDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -215,8 +217,10 @@
     <None Include="res\mfcBasic.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="C:\Users\ljy0812\Documents\네이트온 받은 파일\2569361_1549932737445.jpg" />
     <Image Include="res\bitmap1.bmp" />
     <Image Include="res\mfcBasic.ico" />
+    <Image Include="test.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

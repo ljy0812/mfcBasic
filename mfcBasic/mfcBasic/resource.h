@@ -7,6 +7,7 @@
 #define IDD_DIALOG_INSERT               130
 #define IDD_DIALOG_SHOW_INFO            132
 #define IDB_BITMAP1                     135
+#define IDB_INFO_PICTURE                135
 #define IDC_BUTTON_SEARCH               1001
 #define IDC_EDIT_SEARCH_ID              1002
 #define IDC_LIST_INDEX                  1003
@@ -27,8 +28,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_COMMAND_VALUE         32772
 #define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

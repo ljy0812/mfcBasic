@@ -21,6 +21,7 @@ CmfcBasicDlg::CmfcBasicDlg(CWnd* pParent /*=nullptr*/)
 	m_pUserManager = std::make_shared<UserManager>();
 	m_pUserInsertDlg = std::make_shared<CUserInsertDlg>();
 	m_pShowUserInfo = std::make_shared<CShowUserInfo>();
+	m_pFileManager = std::make_shared<FileManager>();
 
 	m_selectedIndexOnMenu = -1;
 	m_selectedIndexOnUserList = -1;
@@ -139,21 +140,32 @@ void CmfcBasicDlg::OnLbnDblclkListIndex()
 	}
 	else if (m_selectedIndexOnMenu != 0)
 	{
-		if (m_selectedIndexOnUserList >= 0)
+		if (m_selectedIndexOnMenu == 3)
 		{
-			if (m_selectedIndexOnMenu == 1)
-			{
-				MenuEditUserInfo(m_userIdInteger);
-			}
-			else if (m_selectedIndexOnMenu == 2)
-			{
-				MenuDeleteUser(m_userIdInteger);
-			}
+			MenuFileSave();
 		}
-		else
+		else if (m_selectedIndexOnMenu == 4)
 		{
-			MessageBox(_T("사용자를 선택 후 눌러주세요."));
+			MenuFileLoad();
 		}
+		else 
+		{
+			if (m_selectedIndexOnUserList >= 0)
+			{
+				if (m_selectedIndexOnMenu == 1)
+				{
+					MenuEditUserInfo(m_userIdInteger);
+				}
+				else if (m_selectedIndexOnMenu == 2)
+				{
+					MenuDeleteUser(m_userIdInteger);
+				}
+			}
+			else
+			{
+				MessageBox(_T("사용자를 선택 후 눌러주세요."));
+			}
+		}		
 		
 	}
 }
@@ -287,6 +299,34 @@ void CmfcBasicDlg::MenuDeleteUser(const int& userId)
 	}
 }
 
+
+void CmfcBasicDlg::MenuFileSave()
+{
+	auto isCompleteSave = m_pFileManager->SaveAsCsv(m_pUserManager);
+	if (isCompleteSave)
+	{
+		MessageBox(_T("저장하기완료"));
+	}
+	else
+	{
+		MessageBox(_T("저장하기실패"));
+	}
+}
+
+void CmfcBasicDlg::MenuFileLoad()
+{
+	auto isCompleteLoad = m_pFileManager->LoadAsCsv(m_pUserManager);
+	if (isCompleteLoad)
+	{
+		ResettingViewList();
+		MessageBox(_T("불러오기완료"));
+
+	}
+	else
+	{
+		MessageBox(_T("불러오기실패"));
+	}
+}
 
 std::shared_ptr<UserManager> CmfcBasicDlg::GetPointerUserManager()
 {

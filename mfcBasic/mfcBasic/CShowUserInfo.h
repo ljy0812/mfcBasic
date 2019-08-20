@@ -16,10 +16,12 @@ public:
 	enum { IDD = IDD_DIALOG_SHOW_INFO };
 #endif
 
+private:
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
 	DECLARE_MESSAGE_MAP()
+
 public:
 	CStatic m_showNo;
 	CStatic m_showName;
@@ -27,4 +29,6 @@ public:
 	CStatic m_showPosition;
 	CStatic m_showTeam;
 	CStatic m_showPhoto;
+
+
 };
