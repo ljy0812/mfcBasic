@@ -42,6 +42,9 @@
     <ClInclude Include="UserManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfcBasic.cpp">
@@ -65,6 +68,9 @@
     <ClCompile Include="UserManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mfcBasic.rc">
@@ -78,6 +84,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\mfcBasic.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="C:\Users\ljy0812\Documents\네이트온 받은 파일\2569361_1549932737445.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="test.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -74,8 +74,14 @@ void CUserInsertDlg::OnBnClickedButtonInsert()
 		}
 		else if (selectedIndexOnMenu == 1)
 		{
-			pUserManager->UpdateUserInformation(userId, newUser);
-			MessageBox(TEXT("변경되었습니다."));
+			if (pUserManager->UpdateUserInformation(userId, newUser))
+			{
+				MessageBox(TEXT("변경되었습니다."));
+			}
+			else
+			{
+				MessageBox(TEXT("변경 실패하였습니다."));
+			}
 		}
 
 		m_pMainDlg->ResettingViewList();
