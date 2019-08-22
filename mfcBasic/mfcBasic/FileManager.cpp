@@ -62,7 +62,7 @@ bool FileManager::LoadAsCsv(std::shared_ptr<UserManager> m_pUserManager)
 
 	while (file.good())
 	{
-		std::vector<std::string> row = ReadRowCsv(file, ',');
+		const std::vector<std::string>& row = ReadRowCsv(file, ',');
 
 		if (!row[0].find("#"))
 		{
@@ -85,8 +85,7 @@ bool FileManager::LoadAsCsv(std::shared_ptr<UserManager> m_pUserManager)
 	return true;
 }
 
-
-std::vector<std::string> FileManager::ReadRowCsv(std::istream &file, char cDelimiter)
+std::vector<std::string> FileManager::ReadRowCsv(std::istream &file, char delimiter)
 {
 	std::stringstream stringStream;
 	bool inquotes = false;
@@ -110,7 +109,7 @@ std::vector<std::string> FileManager::ReadRowCsv(std::istream &file, char cDelim
 				inquotes = false;
 			}
 		}
-		else if (!inquotes && getCharFromFile == cDelimiter)
+		else if (!inquotes && getCharFromFile == delimiter)
 		{
 			row.push_back(stringStream.str());
 			stringStream.str("");

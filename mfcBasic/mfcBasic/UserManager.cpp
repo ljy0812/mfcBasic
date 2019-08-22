@@ -1,7 +1,5 @@
-
 #include "stdafx.h"
 #include "UserManager.h"
-#include "User.h"
 
 UserManager::UserManager()
 {
@@ -47,7 +45,6 @@ bool UserManager::DeleteUser(const int& userId)
 	{
 		return false;
 	}
-		
 }
 
 bool UserManager::SearchUserByUserId(const CString& userId)
@@ -71,7 +68,7 @@ bool UserManager::SearchUserByUserId(const CString& userId)
 	}
 }
 
-std::map<int, std::shared_ptr<User>> UserManager::GetUserMap()
+std::unordered_map<int, std::shared_ptr<User>> UserManager::GetUserMap() const
 {
 	return m_id2UserMap;
 }

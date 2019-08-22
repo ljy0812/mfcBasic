@@ -21,7 +21,7 @@ public:
 	CString GetUserTeam();
 	CString GetUserPhoneNumber();
 
-private: 
+private:
 	int m_userPrimaryId;
 	CString m_insertUserName;
 	CString m_insertUserPosition;

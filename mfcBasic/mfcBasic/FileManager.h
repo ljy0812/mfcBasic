@@ -15,7 +15,7 @@ public:
 	bool SaveAsCsv(std::shared_ptr<UserManager> m_pUserManager);
 	bool LoadAsCsv(std::shared_ptr<UserManager> m_pUserManager);
 
-	std::vector<std::string> ReadRowCsv(std::istream &file, char cDelimiter);
+	std::vector<std::string> ReadRowCsv(std::istream &file, char delimiter);
 
 	std::string CStringToString(CString cstr);
 	CString StringToCString(std::string str);

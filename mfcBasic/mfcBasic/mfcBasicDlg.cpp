@@ -246,7 +246,7 @@ void CmfcBasicDlg::ResettingViewList()
 
 void CmfcBasicDlg::ShowUserInfoDlgByUserId(const int& userId)
 {
-	auto& userMap = m_pUserManager->GetUserMap();
+	auto userMap = m_pUserManager->GetUserMap();
 
 	m_pShowUserInfo->ShowWindow(SW_SHOW);
 
@@ -268,7 +268,7 @@ void CmfcBasicDlg::MenuAddUser()
 }
 void CmfcBasicDlg::MenuEditUserInfo(const int& userId)
 {
-	auto& userMap = m_pUserManager->GetUserMap();
+	auto userMap = m_pUserManager->GetUserMap();
 
 	m_pUserInsertDlg->ShowWindow(SW_SHOW);
 	m_pUserInsertDlg->SetWindowTextW(_T("사용자정보 수정하기"));

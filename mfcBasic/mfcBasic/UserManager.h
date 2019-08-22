@@ -1,7 +1,7 @@
 #pragma once
-#include <map>
 #include <memory>
 #include "User.h"
+#include <unordered_map>
 
 
 class UserManager
@@ -15,11 +15,11 @@ public:
 	bool DeleteUser(const int& userId);
 	bool SearchUserByUserId(const CString& userId);
 
-	std::map<int, std::shared_ptr<User>> GetUserMap();
+	std::unordered_map<int, std::shared_ptr<User>> GetUserMap() const;
 	   
 private:
 	int m_autoIncresementForUserId;
-	std::map<int, std::shared_ptr<User>> m_id2UserMap;
+	std::unordered_map<int, std::shared_ptr<User>> m_id2UserMap;
 
 
 };
